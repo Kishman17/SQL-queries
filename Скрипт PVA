@@ -1,0 +1,37 @@
+Скрипт для выгрузки данных с активных PVA-процессов, с привязкой документов, актывный  шаг с пользователем и его email
+
+select a.*,t.eif_summary,t.eifx_performer_set_name,u.user_address
+from (select d.ecs_doc_type_name as d_ecs_doc_type_name ,
+d.eif_contract_number as d_eif_contract_number, 
+d.object_name as d_object_name,
+d.eif_revision as d_eif_revision,
+d.sib_revision_date as d_sib_revision_date,
+d.arctic_company_number as d_arctic_company_number,
+d.sib_package_revision as d_sib_package_revision,
+d.eif_issue_reason as d_eif_issue_reason, 
+d.arctic_document_title as d_arctic_document_title,
+d.sib_unit_title as d_sib_unit_title,
+d.arctic_mark_stamp as d_arctic_mark_stamp,
+d.sib_doc_type_code as d_sib_doc_type_code,
+d.sib_discipline_code as d_sib_discipline_code,
+d.sib_equip_item as d_sib_equip_item,
+d.sib_listing as d_sib_listing,
+d.sib_number_of_sheets_a4 as d_sib_number_of_sheets_a4,
+p.ecs_doc_type_name as p_ecs_doc_type_name,
+p.r_creator_name as p_r_creator_name,	
+p.r_object_id as p_r_object_id,
+p.object_name as p_object_name,
+p.eif_active_step as p_eif_active_step,
+p.r_creation_date as p_r_creation_date,
+p.eif_due_date as p_eif_due_date,
+p.eif_completed_date as p_eif_completed_date,
+p.ecs_lc_state as p_ecs_lc_state,
+p.ecs_internal_ref
+from eifx_deliverable_doc d, eif_action_process p
+where any p.eif_subject_items_ref = d.ecs_internal_chron_ref
+and p.ecs_doc_type_name != 'Процесс контроля качества ПП'
+and d.ecs_doc_type_name IN ('Technical Task','Project Management Document','Basic Project Documentation','Initial data','Engineering Surveys Document','Detailed Design Document','FEED Documents','Project Document','Pre-FEED Documents')
+and p.eif_project_context.eif_project_ref = 'KOS'
+and p.ecs_lc_state = 'Active') a
+left join eif_task t on a.ecs_internal_ref = t.eif_subject_int_ref
+left join dm_user u on t.eifx_performer_set_name = u.user_name enable (ROW_BASED)
