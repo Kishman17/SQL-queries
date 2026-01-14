@@ -1,0 +1,37 @@
+В данном скрипте идет подсчет репитингово значения. с конкретным значеним  
+
+select  count(eif_rp_status)
+from eifx_transmittal
+where  any eif_rp_status = 'Finished - No Subject'
+and ecs_doc_type_name like 'Review Transmittal %'
+and r_creation_date>=date('01.07.2025','dd.mm.yyyy') and r_creation_date<date('31.07.2025','dd.mm.yyyy')
+Enable (return_top 1000);
+===========================================
+выгрузка со всеми ALL 
+
+SELECT object_name, ecs_lc_state, eif_rp_name, eif_rp_status 
+FROM eifx_transmittal 
+WHERE eif_project_ref = '*'
+    AND r_object_id = '0902c11f95dd3de7'
+    AND ALL eif_rp_status = 'Finished - No Subject'
+    AND ecs_doc_type_name LIKE 'Review Transmittal %'
+    AND r_creation_date >= DATE('01/11/2023', 'dd/mm/yyyy') 
+    AND r_creation_date < DATE('01/12/2023', 'dd/mm/yyyy')
+ENABLE (RETURN_TOP 1000)
+
+Для получение конкретного индекса репитингова атрибут
+
+SELECT object_name, ecs_lc_state, eif_rp_name[0] as first_rp_name, eif_rp_status[0] as first_rp_status 
+FROM eifx_transmittal 
+WHERE eif_project_ref = '*'
+    AND r_object_id = '0902c11f95dd3de7'
+    AND eif_rp_status[0] = 'Finished - No Subject'
+    AND ecs_doc_type_name LIKE 'Review Transmittal %'
+    AND r_creation_date >= DATE('01/11/2023', 'dd/mm/yyyy') 
+    AND r_creation_date < DATE('01/12/2023', 'dd/mm/yyyy')
+ENABLE (RETURN_TOP 1000)
+
+•	Используется ANY для поиска любого элемента в repeating атрибуте
+•	Используется ALL если нужно чтобы все элементы удовлетворяли условию
+•	Можно обращаться к конкретным индексам: eif_rp_status[0], eif_rp_status[1] и т.д.
+•	Формат даты в DQL обычно dd/mm/yyyy
