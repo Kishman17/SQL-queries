@@ -1,0 +1,76 @@
+Данные запросы применялись для создания отчета в формате exel-таблицы
+
+select  p.r_object_id, p.object_name, d.arctic_number
+from eif_action_process p, eifx_deliverable_doc (all) d 
+where any p.eif_subject_items_ref = d.ecs_internal_ref
+and p.r_creation_date between date('20.03.2023','dd.mm.yyyy') and date('23.03.2023','dd.mm.yyyy') 
+and p.object_name not like 'Процесс обработки задания%'
+and p.ecs_lc_state = 'Completed'
+union select p.r_object_id, p.object_name, d.arctic_number
+from eif_action_process p, eifx_deliverable_doc d 
+where any p.eif_subject_items_ref = d.ecs_internal_chron_ref
+and  p.r_creation_date between date ('20.03.2023','dd.mm.yyyy') and date ('23.03.2023','dd.mm.yyyy') 
+and p.object_name not like 'Процесс обработки задания%'
+and p.ecs_lc_state != 'Completed' enable (ROW_BASED) 
+==================================================================================================
+select d.ecs_doc_type_name as d_ecs_doc_type_name,
+d.eif_contract_number as d_eif_contract_number,
+d.object_name as d_object_name, 
+d.eif_revision as d_eif_revision,
+d.sib_revision_date as d_sib_revision_date,
+d.arctic_company_number as d_arctic_company_number,
+d.sib_package_revision as d_sib_package_revision,    
+d.eif_issue_reason as d_eif_issue_reason, 
+d.arctic_document_title as d_arctic_document_title,
+d.sib_unit_title as d_sib_unit_title,    
+d.arctic_mark_stamp as d_arctic_mark_stamp,
+d.sib_doc_type_code as d_sib_doc_type_code,
+d.sib_discipline_code as d_sib_discipline_code,    
+d.sib_equip_item as d_sib_equip_item,    
+d.sib_format as d_sib_format,    
+d.sib_number_of_sheets as d_sib_number_of_sheets,    
+p.ecs_doc_type_name as p_ecs_doc_type_name,
+p.r_creator_name as p_r_creator_name,                
+p.r_object_id as p_r_object_id,
+p.object_name as p_object_name,
+p.eif_active_step as p_eif_active_step,
+p.r_creation_date as p_r_creation_date,
+p.eif_due_date as p_eif_due_date,
+p.eif_completed_date as p_eif_completed_date,
+p.ecs_lc_state as p_ecs_lc_state
+from eifx_deliverable_doc (all) d, eif_action_process p
+where any p.eif_subject_items_ref = d.ecs_internal_ref 
+and p.ecs_doc_type_name = '0902c11f8fcbd7ba1668510022138'
+and d.sib_format != '' 
+and p.ecs_lc_state = 'Completed'
+union
+select d.ecs_doc_type_name as d_ecs_doc_type_name,
+d.eif_contract_number as d_eif_contract_number,
+d.object_name as d_object_name, 
+d.eif_revision as d_eif_revision,
+d.sib_revision_date as d_sib_revision_date,
+d.arctic_company_number as d_arctic_company_number,
+d.sib_package_revision as d_sib_package_revision,    
+d.eif_issue_reason as d_eif_issue_reason, 
+d.arctic_document_title as d_arctic_document_title,
+d.sib_unit_title as d_sib_unit_title,    
+d.arctic_mark_stamp as d_arctic_mark_stamp,
+d.sib_doc_type_code as d_sib_doc_type_code,
+d.sib_discipline_code as d_sib_discipline_code,    
+d.sib_equip_item as d_sib_equip_item,    
+d.sib_format as d_sib_format,    
+d.sib_number_of_sheets as d_sib_number_of_sheets,    
+p.ecs_doc_type_name as p_ecs_doc_type_name,
+p.r_creator_name as p_r_creator_name,                
+p.r_object_id as p_r_object_id,
+p.object_name as p_object_name,
+p.eif_active_step as p_eif_active_step,
+p.r_creation_date as p_r_creation_date,
+p.eif_due_date as p_eif_due_date,
+p.eif_completed_date as p_eif_completed_date,
+p.ecs_lc_state as p_ecs_lc_state
+from eifx_deliverable_doc d, eif_action_process p
+where any p.eif_subject_items_ref = d.ecs_internal_chron_ref 
+and p.ecs_doc_type_name = '0902c11f8fcbd7ba1668510022138'
+and d.sib_format != ''
+and p.ecs_lc_state != 'Completed' enable (ROW_BASED);
