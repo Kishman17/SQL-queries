@@ -1,4 +1,4 @@
-Скрипт для выгрузки данных с активных PVA-процессов, с привязкой документов, актывный  шаг с пользователем и его email
+Скрипт принменяется для выгрузки данных с активных PVA-процессов, с привязкой документов, актывный  шаг с пользователем и его email
 
 select a.*,t.eif_summary,t.eifx_performer_set_name,u.user_address
 from (select d.ecs_doc_type_name as d_ecs_doc_type_name ,
