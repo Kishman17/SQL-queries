@@ -1,5 +1,24 @@
-Скрипт принменяется для выгрузки данных с активных PVA-процессов, с привязкой документов, актывный  шаг с пользователем и его email
+\Отчет для PVA-процессов активных, с привязкой д-ов, актывный шаг с п-ем и его email
 
+\\Бизнес задача: Статистика активных PVA-процесов на конкретном проекте, 
+на каком шаге и какой пользователь участвует на данном шаге, с персональной информацией ввиде корп email.
+
+\\\ Описнае данных 
+    ecs_doc_type_name - тип документа
+    eif_contract_number - номер контракта
+    object_name - имя объекта
+    eif_revision - Ревизия 
+    sib_revision_date - Дата Выпуска Ревизии
+    arctic_document_title - Наименование документа
+    sib_unit_title - Титул
+    arctic_mark_stamp - Марка комплекта
+    sib_doc_type_code - 	Код Типа Документа
+    sib_discipline_code - Код Дисциплины
+    sib_equip_item - Номенклатура
+    eif_active_step - Активный шаг
+\\\ Ключивые моменты в запросе 
+    1. Использование подзапроса для возврата даных по документу и процессу
+    2. соединение Left Join таблицы информации о пользовтаели, а так же таблицу задачи. 
 select a.*,t.eif_summary,t.eifx_performer_set_name,u.user_address
 from (select d.ecs_doc_type_name as d_ecs_doc_type_name ,
 d.eif_contract_number as d_eif_contract_number, 
@@ -35,3 +54,8 @@ and p.eif_project_context.eif_project_ref = 'KOS'
 and p.ecs_lc_state = 'Active') a
 left join eif_task t on a.ecs_internal_ref = t.eif_subject_int_ref
 left join dm_user u on t.eifx_performer_set_name = u.user_name enable (ROW_BASED)
+
+Пример вывода (схематично)
+d_ecs_doc_type_name| d_eif_contract_number |d_object_name| d_eif_revision| d_sib_revision_date| d_arctic_company_number| d_sib_package_revision |d_eif_issue_reason|	d_arctic_document_title|	d_sib_unit_title|d_arctic_mark_stamp| d_sib_doc_type_code| d_sib_discipline_code|	d_sib_equip_item| d_sib_listing	|d_sib_number_of_sheets_a4|
+|..................|.......................|.............|...............|....................|........................|........................|..................|.........................|......................................|....................|......................|.................|...............|.........................|
+Detailed Design Document| 0072.2024 |CPP.0072.2024-1803-TXM.LAY-0003 |0 |12.01.2026 12:00| IFU - Выпущено для использования|Разрезы 1-1, 2-2 |1803 - Насосная противопожарного водоснабжения|TXM - Технология производства механическая | Mechanical Process Technology| LAY - План расположения (трубопроводов, оборудования, кабелей) | Layout Drawing (pipilines, equipment, cables)| A4x4-1	
