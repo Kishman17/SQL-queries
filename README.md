@@ -1,1 +1,1 @@
-# SQL-queries portfolio
+# sql-analytics-portfolio
